@@ -1,7 +1,7 @@
 # FunIFrame
 ## ```open```
 Opens the iframe in the given container with given URL and returns an object which exposes various iframe properties and convenience method to close it.
-### Example
+### ```open``` example
 
 ```javascript
 var funiframe = require('funiframe'),
@@ -13,7 +13,7 @@ var funiframe = require('funiframe'),
 iframe.close();
 
 ```
-### Options:
+### ```open``` options:
 * url
  * is the url which will opened with the iframe
 * to
