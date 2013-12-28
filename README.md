@@ -4,7 +4,7 @@ Opens the iframe in the given container with given URL and returns an object whi
 ### Example
 
 ```javascript
-var funiframe = require('funiframe');
+var funiframe = require('funiframe'),
     container = document.getElementById('funiframe'),
     iframe = funiframe.open({
       url: 'http://localhost:8080',
