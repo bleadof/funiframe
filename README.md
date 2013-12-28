@@ -4,10 +4,11 @@ Opens the iframe in the given container with given URL and returns an object whi
 ### Example
 
 ```javascript
-var container = $('#funiframe'),
+var funiframe = require('funiframe');
+    container = document.getElementById('funiframe'),
     iframe = funiframe.open({
       url: 'http://localhost:8080',
-      to: container.get(0)
+      to: container
     });
 iframe.close();
 
