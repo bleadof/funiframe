@@ -1,0 +1,22 @@
+{
+  "name": "funiframe",
+  "main": "./index.js",
+  "browser": {
+    "jquery": "./specs/vendor/jquery-2.0.3.js"
+  },
+  "browserify-shim": {
+    "jquery": "$"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "devDependencies": {
+    "browserify": "~3.14.1",
+    "chai": "~1.8.1",
+    "browserify-shim": "~3.1.4",
+    "lodash": "~2.4.1",
+    "chokidar": "~0.8.1"
+  }
+}
