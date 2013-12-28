@@ -22,8 +22,5 @@ var chokidar = require('chokidar'),
     watcher = chokidar.watch('.', {ignored: ignore, persistent: true, ignoreInitial: true});
 
 watcher.on('all', function(event, path) {
-    if(path === 'build.js') {
-        build = require('./build');
-    }
     queue({event: event, path: path});
 });
