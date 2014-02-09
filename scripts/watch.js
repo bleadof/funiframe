@@ -19,8 +19,12 @@ var chokidar = require('chokidar'),
         builtFiles = build();
         console.log('\uD83D\uDC40 ', buildQueue.pop(), event, path, 'build done');
     },
-    watcher = chokidar.watch('.', {ignored: ignore, persistent: true, ignoreInitial: true});
+    watcher = undefined;
 
-watcher.on('all', function(event, path) {
-    queue({event: event, path: path});
-});
+module.exports = function buildOnFileChange(buildPath) {
+    watcher = chokidar.watch(buildPath, {ignored: ignore, persistent: true, ignoreInitial: true});
+
+    watcher.on('all', function(event, path) {
+        queue({event: event, path: path});
+    });
+};

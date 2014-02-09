@@ -10,7 +10,7 @@ var funiframe = require('funiframe'),
       url: 'http://localhost:8080',
       to: container
     });
-iframe.close();
+    iframe.close();
 
 ```
 ### ```open``` options:
@@ -24,3 +24,6 @@ iframe.close();
 * height
  * is the height of the iframe
  * default: document height / 2
+
+# Development
+Run ```node startdev.js```
