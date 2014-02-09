@@ -82,49 +82,49 @@ var fs         = require('fs'),
                 })
                 .take(1);
         return allFiles;
-    };
-
-module.exports = function build() {
-    var index = browserify('./src/funiframe.js'),
-        ignored = ['index.js', 'specs/all.specs.js', 'specs/built.js'],
-        ignoredForSpecs = _.clone(ignored)
-            .slice(-2)
-            .map(function(path) {
-                return path.replace('specs/', '');
-            }).concat(['main.js']),
-        specsOpts  = {
-            basedir: './specs',
-            noParse: [
-                './specs/vendor/mocha.js'
-            ],
-            debug: true
-        },
-        allSpecFiles;
-    index
-        .bundle({'standalone': 'funiframe'})
-        .pipe(fs.createWriteStream('./index.js'));
-    allSpecFiles = walk({
-        dir:'./specs',
-        basedir: '.',
-        filter: function(path) {
-            return ignoredForSpecs
-                .filter(function(p) {
-                    return p === path;
-                }).length === 0 &&
-                path.indexOf('.js') > -1 &&
-                path.indexOf('vendor') === -1;
-        }
-    });
-    allSpecFiles.onValue(function(files) {
+    },
+    buildSpecBundle = function(files) {
         var allSpecsFileName = createSpecRequireFile('./specs/all.specs.js', files),
+            specsOpts  = {
+                basedir: './specs',
+                noParse: [
+                    './specs/vendor/mocha.js'
+                ],
+                debug: true
+            },
             specs = browserify(specsOpts);
         specs
             .add('./main.js')
             .bundle()
             .pipe(fs.createWriteStream('./specs/built.js'));
-    });
-    allSpecFiles.onError(function(error) {
-        console.error(error);
-    });
+    },
+    buildSpecs = function() {
+        var ignored = ['all.specs.js', 'built.js', 'main.js'],
+            allSpecFiles = walk({
+                dir:'./specs',
+                basedir: '.',
+                filter: function(path) {
+                    return ignored
+                        .filter(function(p) {
+                            return p === path;
+                        }).length === 0 &&
+                        path.indexOf('.js') > -1 &&
+                        path.indexOf('vendor') === -1;
+                }
+            });
+        allSpecFiles.onValue(function(files) {
+            buildSpecBundle(files);
+        });
+        allSpecFiles.onError(function(error) {
+            console.error(error);
+        });
+    };
+
+module.exports = function build() {
+    var index = browserify('./src/funiframe.js');
+    index
+        .bundle({'standalone': 'funiframe'})
+        .pipe(fs.createWriteStream('./index.js'));
+    buildSpecs();
     return ['index.js', 'specs/all.specs.js', 'specs/built.js'];
 };
