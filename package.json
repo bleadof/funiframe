@@ -18,6 +18,7 @@
     "browserify-shim": "~3.1.4",
     "lodash": "~2.4.1",
     "chokidar": "~0.8.1",
-    "baconjs": "~0.7.2"
+    "baconjs": "~0.7.2",
+    "chai-jquery": "~1.2.1"
   }
 }
