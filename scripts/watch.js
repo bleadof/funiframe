@@ -1,8 +1,17 @@
 var chokidar = require('chokidar'),
     build = require('./build'),
-    builtFiles = build(),
     id = 0,
     buildQueue = [],
+    queue = function(opts) {
+        var event = opts.event,
+            path = opts.path;
+        buildQueue.push(id++);
+        builtFiles = build(function() {
+            console.log('\uD83D\uDC40 ', buildQueue.shift(), event, path, 'build done');
+        });
+        return builtFiles;
+    },
+    builtFiles = queue({event:'start', path:'.'}),
     ignoreGit = function(path) {
         return path.indexOf('.git/') > -1;
     },
@@ -11,13 +20,6 @@ var chokidar = require('chokidar'),
     },
     ignore = function ignore(path, stat) {
         return path.match(/[\/\\]\./) !== null || ignoreBuiltFiles(path) || ignoreGit(path);
-    },
-    queue = function(opts) {
-        var event = opts.event,
-            path = opts.path;
-        buildQueue.push(id++);
-        builtFiles = build();
-        console.log('\uD83D\uDC40 ', buildQueue.pop(), event, path, 'build done');
     },
     watcher = undefined;
 

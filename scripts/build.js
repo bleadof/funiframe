@@ -83,7 +83,7 @@ var fs         = require('fs'),
                 .take(1);
         return allFiles;
     },
-    buildSpecBundle = function(files) {
+    buildSpecBundle = function(files, done) {
         var allSpecsFileName = createSpecRequireFile('./specs/all.specs.js', files),
             specsOpts  = {
                 basedir: './specs',
@@ -96,9 +96,10 @@ var fs         = require('fs'),
         specs
             .add('./main.js')
             .bundle()
+            .on('end', done)
             .pipe(fs.createWriteStream('./specs/built.js'));
     },
-    buildSpecs = function() {
+    buildSpecs = function(done) {
         var ignored = ['all.specs.js', 'built.js', 'main.js'],
             allSpecFiles = walk({
                 dir:'./specs',
@@ -113,18 +114,21 @@ var fs         = require('fs'),
                 }
             });
         allSpecFiles.onValue(function(files) {
-            buildSpecBundle(files);
+            buildSpecBundle(files, done);
         });
         allSpecFiles.onError(function(error) {
             console.error(error);
         });
     };
 
-module.exports = function build() {
+module.exports = function build(done) {
     var index = browserify('./src/funiframe.js');
     index
-        .bundle({'standalone': 'funiframe'})
+        .bundle({
+            standalone: 'funiframe',
+            debug: true
+        })
         .pipe(fs.createWriteStream('./index.js'));
-    buildSpecs();
+    buildSpecs(done);
     return ['index.js', 'specs/all.specs.js', 'specs/built.js'];
 };
